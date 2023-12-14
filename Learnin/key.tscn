@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://4ayaki2le02p"]
+
+[ext_resource type="Script" path="res://Key.cs" id="1_1ko8d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0ck8s"]
+size = Vector2(96, 48)
+
+[node name="Node2D" type="Polygon2D"]
+color = Color(0.745098, 0.576471, 0.188235, 1)
+polygon = PackedVector2Array(0, 0, 100, 0, 100, 50, 0, 50)
+script = ExtResource("1_1ko8d")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(48, 24)
+shape = SubResource("RectangleShape2D_0ck8s")
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
