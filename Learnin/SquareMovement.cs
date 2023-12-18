@@ -39,8 +39,7 @@ public partial class SquareMovement : Polygon2D
 			switch (eventKey.Keycode)
 			{
 				case Godot.Key.D:
-					GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
-					QueueFree();
+					SigKill();
 					break;
 			}
 		}
@@ -64,6 +63,10 @@ public partial class SquareMovement : Polygon2D
 				break;
 			case "play":
 				_inGame = !_inGame;
+				if (!_inGame)
+				{
+					SigKill();
+				}
 				break;
 		}
 	}
@@ -106,5 +109,11 @@ public partial class SquareMovement : Polygon2D
 	private string GetShapeType()
 	{
 		return _type;
+	}
+
+	private void SigKill()
+	{
+		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+		QueueFree();
 	}
 }

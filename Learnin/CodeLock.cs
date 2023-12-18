@@ -55,17 +55,7 @@ public partial class CodeLock : Polygon2D
 			switch (eventKey.Keycode)
 			{
 				case Godot.Key.D:
-					GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
-					GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
-					GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
-					if (_doors.Any())
-					{
-						foreach (var door in _doors)
-						{
-							GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
-						}
-					}
-					QueueFree();
+					SigKill();
 					break;
 			}
 		}
@@ -140,6 +130,10 @@ public partial class CodeLock : Polygon2D
 				{
 					_dynamicText.Clear();
 				}
+				else
+				{
+					SigKill();
+				}
 				break;
 		}
 	}
@@ -166,5 +160,20 @@ public partial class CodeLock : Polygon2D
 	private string GetShapeType()
 	{
 		return _type;
+	}
+
+	private void SigKill()
+	{
+		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
+		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
+		if (_doors.Any())
+		{
+			foreach (var door in _doors)
+			{
+				GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
+			}
+		}
+		QueueFree();
 	}
 }
