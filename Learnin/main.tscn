@@ -49,6 +49,7 @@ offset_bottom = 400.0
 theme_override_font_sizes/font_size = 45
 text = "ITEM LIST"
 script = ExtResource("2_lx4am")
+metadata/_edit_use_anchors_ = true
 
 [node name="EditMenu" type="Polygon2D" parent="Menu"]
 color = Color(0.447059, 0.266667, 1, 1)

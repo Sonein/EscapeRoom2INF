@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -6,7 +7,7 @@ namespace Learnin;
 
 public partial class ItemList : MenuButton
 {
-	private System.Collections.Generic.Dictionary<Node, int> _items;
+	private System.Collections.Generic.Dictionary<Polygon2D, int> _items;
 
 	private PopupMenu _popupMenu;
 
@@ -16,7 +17,7 @@ public partial class ItemList : MenuButton
 	
 	public override void _Ready()
 	{
-		_items = new System.Collections.Generic.Dictionary<Node, int>();
+		_items = new System.Collections.Generic.Dictionary<Polygon2D, int>();
 		_popupMenu = this.GetPopup();
 		Callable callable = new Callable(this, nameof(OnMenuItemSelected));
 		_popupMenu.Connect("id_pressed", callable);
@@ -27,13 +28,13 @@ public partial class ItemList : MenuButton
 	{
 	}
 
-	public void AddItem(Node x)
+	public void AddItem(Polygon2D x)
 	{
 		_items.Add(x, _id);
 		_popupMenu.AddItem(x.Name, _id++);
 	}
 
-	public void RemoveItem(Node x)
+	public void RemoveItem(Polygon2D x)
 	{
 		int id = _items.GetValueOrDefault(x);
 		int index = _popupMenu.GetItemIndex(id);
@@ -57,7 +58,11 @@ public partial class ItemList : MenuButton
 		{
 			case "play":
 				_inGame = !_inGame;
-				//ClearSelf();
+				if (!_inGame)
+				{
+					ClearSelf();
+				}
+
 				break;
 		}
 	}

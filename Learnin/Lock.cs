@@ -56,24 +56,7 @@ public partial class Lock : Polygon2D
 			switch (eventKey.Keycode)
 			{
 				case Godot.Key.D:
-					GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
-					GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
-					GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
-					if (_keys.Any())
-					{
-						foreach (var key in _keys)
-						{
-							GetNode<Polygon2D>("/root/Main/" + key).Call("RemoveLock", Name);
-						}
-					}
-					if (_doors.Any())
-					{
-						foreach (var door in _doors)
-						{
-							GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
-						}
-					}
-					QueueFree();
+					SigKill();
 					break;
 			}
 		}
@@ -131,6 +114,10 @@ public partial class Lock : Polygon2D
 				break;
 			case "play":
 				_inGame = !_inGame;
+				if (!_inGame)
+				{
+					SigKill();
+				}
 				break;
 		}
 	}
@@ -174,5 +161,27 @@ public partial class Lock : Polygon2D
 	private string GetShapeType()
 	{
 		return _type;
+	}
+
+	private void SigKill()
+	{
+		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
+		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
+		if (_keys.Any())
+		{
+			foreach (var key in _keys)
+			{
+				GetNode<Polygon2D>("/root/Main/" + key).Call("RemoveLock", Name);
+			}
+		}
+		if (_doors.Any())
+		{
+			foreach (var door in _doors)
+			{
+				GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
+			}
+		}
+		QueueFree();
 	}
 }

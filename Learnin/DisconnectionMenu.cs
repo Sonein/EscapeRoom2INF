@@ -40,11 +40,10 @@ public partial class DisconnectionMenu : MenuButton
 
 	private void AddItem(string x)
 	{
-		if (_items.ContainsKey(x))
+		if (!_items.TryAdd(x, _id))
 		{
 			return;
 		}
-		_items.Add(x, _id);
 		_popupMenu.AddItem(x, _id++);
 	}
 
