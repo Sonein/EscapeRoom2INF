@@ -130,10 +130,6 @@ public partial class CodeLock : Polygon2D
 				{
 					_dynamicText.Clear();
 				}
-				else
-				{
-					SigKill();
-				}
 				break;
 		}
 	}
