@@ -114,10 +114,6 @@ public partial class Lock : Polygon2D
 				break;
 			case "play":
 				_inGame = !_inGame;
-				if (!_inGame)
-				{
-					SigKill();
-				}
 				break;
 		}
 	}

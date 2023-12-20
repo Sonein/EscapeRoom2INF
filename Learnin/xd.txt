@@ -1,0 +1,9 @@
+Square0 none 265 186 
+Key1 key 545 302 
+Lock2 lock 755 233 
+Door3 door 1122 232 
+#
+Square0 $
+Key1 Lock2 $
+Lock2 Door3 $
+Door3 $

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cg4s4c7bfoypy"]
+[gd_scene load_steps=9 format=3 uid="uid://cg4s4c7bfoypy"]
 
 [ext_resource type="Script" path="res://OpenMenu.cs" id="1_dvupd"]
 [ext_resource type="Script" path="res://ItemList.cs" id="2_lx4am"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://ConnectionMenu.cs" id="3_5o7a2"]
 [ext_resource type="Script" path="res://HideMenu.cs" id="3_cbhqu"]
 [ext_resource type="Script" path="res://DisconnectionMenu.cs" id="4_tbg6i"]
+[ext_resource type="Script" path="res://Save.cs" id="6_fgwai"]
+[ext_resource type="Script" path="res://Load.cs" id="7_ed6eg"]
 
 [node name="Main" type="Node2D"]
 
@@ -93,6 +95,15 @@ offset_top = 936.0
 offset_right = 1764.0
 offset_bottom = 1016.0
 text = "SAVE"
+script = ExtResource("6_fgwai")
+
+[node name="SavePath" type="TextEdit" parent="Menu/Save"]
+layout_mode = 0
+offset_left = -108.0
+offset_top = -232.0
+offset_right = 212.0
+offset_bottom = -200.0
+placeholder_text = "Path for saving"
 
 [node name="Load" type="Button" parent="Menu"]
 anchors_preset = -1
@@ -105,6 +116,15 @@ offset_top = 936.0
 offset_right = 1900.0
 offset_bottom = 1016.0
 text = "LOAD"
+script = ExtResource("7_ed6eg")
+
+[node name="LoadPath" type="TextEdit" parent="Menu/Load"]
+layout_mode = 0
+offset_left = -244.0
+offset_top = -176.0
+offset_right = 76.0
+offset_bottom = -144.0
+placeholder_text = "Path to load from"
 
 [node name="Hider" type="Button" parent="."]
 offset_left = 1872.0
@@ -115,4 +135,8 @@ text = "->"
 script = ExtResource("3_cbhqu")
 
 [connection signal="button_down" from="Menu/Play" to="Menu/Play" method="_on_button_down"]
+[connection signal="button_down" from="Menu/Save" to="Menu/Save" method="_on_button_down"]
+[connection signal="text_changed" from="Menu/Save/SavePath" to="Menu/Save" method="_on_save_path_text_changed"]
+[connection signal="button_down" from="Menu/Load" to="Menu/Load" method="_on_button_down"]
+[connection signal="text_changed" from="Menu/Load/LoadPath" to="Menu/Load" method="_on_load_path_text_changed"]
 [connection signal="button_down" from="Hider" to="Hider" method="_on_button_down"]
