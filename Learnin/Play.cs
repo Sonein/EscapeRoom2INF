@@ -56,7 +56,7 @@ public partial class Play : Button
 		List<PolygonInfo> nodesFr2 = _gameSaver.LoadState();
 		foreach (var polygonInfo in nodesFr2)
 		{
-			Polygon2D tempPolygon = ObjectCreator.Create(polygonInfo.Name, polygonInfo.Type, polygonInfo.Position);
+			Polygon2D tempPolygon = ObjectCreator.Create(polygonInfo.Name, polygonInfo.Type, polygonInfo.Position, polygonInfo.Special);
 			GetNode<Node>("/root/Main").AddChild(tempPolygon);
 			GetNode<Node>("/root/Main/Menu/ItemList/ListMenu").Call("AddItem", tempPolygon);
 		}

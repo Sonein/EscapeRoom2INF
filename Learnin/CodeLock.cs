@@ -25,7 +25,6 @@ public partial class CodeLock : Polygon2D
 		_accepts.Add("lock", false);
 		_accepts.Add("door", true);
 		_doors = new List<string>();
-		_unlocked = true;
 		_dynamicText = (TextEdit)this.GetChildren()[0];
 		_type = "code";
 	}
@@ -102,9 +101,9 @@ public partial class CodeLock : Polygon2D
 		{
 			_code = _dynamicText.Text;
 		}
-		_unlocked = false;
 		if (_inGame && _code.Equals(_dynamicText.Text))
 		{
+			GD.Print(_code + " " + _dynamicText.Text);
 			_unlocked = true;
 		}
 	}
@@ -129,6 +128,10 @@ public partial class CodeLock : Polygon2D
 				if (_inGame)
 				{
 					_dynamicText.Clear();
+					if (string.IsNullOrEmpty(_code))
+					{
+						_unlocked = true;
+					}
 				}
 				break;
 		}
@@ -156,6 +159,16 @@ public partial class CodeLock : Polygon2D
 	private string GetShapeType()
 	{
 		return _type;
+	}
+
+	private string GetCode()
+	{
+		return _code;
+	}
+
+	private void SetCode(string code)
+	{
+		_code = code;
 	}
 
 	private void SigKill()
