@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://Load.cs" id="7_ed6eg"]
 
 [node name="Main" type="Node2D"]
+metadata/_edit_horizontal_guides_ = [792.0]
 
 [node name="Menu" type="Polygon2D" parent="."]
 color = Color(0.917647, 0.866667, 0.968627, 1)

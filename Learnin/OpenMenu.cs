@@ -30,23 +30,23 @@ public partial class OpenMenu : MenuButton
 			{
 				case 0:
 					name = "Square" + _id;
-					tempPolygon = ObjectCreator.Create(name, "none", position);
+					tempPolygon = ObjectCreator.Create(name, "none", position, null);
 					break;
 				case 1:
 					name = "Door" + _id;
-					tempPolygon = ObjectCreator.Create(name, "door", position);
+					tempPolygon = ObjectCreator.Create(name, "door", position, null);
 					break;
 				case 2:
 					name = "CodeLock" + _id;
-					tempPolygon = ObjectCreator.Create(name, "code", position);
+					tempPolygon = ObjectCreator.Create(name, "code", position, null);
 					break;
 				case 3:
 					name = "Lock" + _id;
-					tempPolygon = ObjectCreator.Create(name, "lock", position);
+					tempPolygon = ObjectCreator.Create(name, "lock", position, null);
 					break;
 				case 4:
 					name = "Key" + _id;
-					tempPolygon = ObjectCreator.Create(name, "key", position);
+					tempPolygon = ObjectCreator.Create(name, "key", position, null);
 					break;
 			}
 

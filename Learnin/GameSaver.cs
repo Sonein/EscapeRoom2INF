@@ -21,14 +21,13 @@ public class GameSaver
             {
                 connections = v.Call("GiveUpYourList").AsGodotArray<string>().Duplicate();
             }
-            PolygonInfo temp = new PolygonInfo(v.Name, type, v.Position, connections);
+            PolygonInfo temp = new PolygonInfo(v.Name, type, v.Position, connections, (string)v.Call("GetCode"));
             _polygonInfos.Add(temp);
         }
     }
 
     public List<PolygonInfo> LoadState()
     {
-        //TODO Play musi sparcovat sam
         return _polygonInfos;
     }
 
@@ -42,6 +41,11 @@ public class GameSaver
             stringBuilder.Append(polygonInfo.Name).Append(' ');
             stringBuilder.Append(polygonInfo.Type).Append(' ');
             stringBuilder.Append(polygonInfo.Position.X).Append(' ').Append(polygonInfo.Position.Y).Append(' ');
+            if (polygonInfo.Type.Equals("code"))
+            {
+                stringBuilder.Append(polygonInfo.Special).Append(' ');
+            }
+            stringBuilder.Append('$');
             sw.WriteLine(stringBuilder);
         }
         sw.WriteLine('#');
@@ -76,7 +80,19 @@ public class GameSaver
                 string type = scanner.Next();
                 int posX = scanner.NextInt();
                 int posY = scanner.NextInt();
-                _polygonInfos.Add(new PolygonInfo(name, type, new Vector2(posX, posY), new Array<string>()));
+                string special = scanner.Next();
+                if (type.Equals("code"))
+                {
+                    if (special.Equals("$"))
+                    {
+                        special = null;
+                    }
+                    else
+                    {
+                        scanner.Next();
+                    }
+                }
+                _polygonInfos.Add(new PolygonInfo(name, type, new Vector2(posX, posY), new Array<string>(), special));
             }
 
             while (scanner.HasNext())
@@ -99,14 +115,13 @@ public class GameSaver
                         if (_polygonInfos[i].Name.Equals(line))
                         {
                             _polygonInfos[i] = new PolygonInfo(_polygonInfos[i].Name, _polygonInfos[i].Type,
-                                _polygonInfos[i].Position, connections);
+                                _polygonInfos[i].Position, connections, _polygonInfos[i].Special);
                         }
                     }
                 }
             }
         }
         scanner.Close();
-        //TODO Load musi sparcovat sam
         return _polygonInfos;
     }
 

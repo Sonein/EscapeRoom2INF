@@ -1,9 +1,11 @@
-Square0 none 265 186 
-Key1 key 545 302 
-Lock2 lock 755 233 
-Door3 door 1122 232 
+CodeLock0 code 241 187 piko $
+Xdoor door 1122 232 $
+Xdoor2 door 500 500 $
+Lock0 lock 684 85 $
+Key1 key 978 125 $
 #
-Square0 $
-Key1 Lock2 $
-Lock2 Door3 $
-Door3 $
+CodeLock0 Xdoor Xdoor2 $
+Xdoor $
+Xdoor2 $
+Lock0 Xdoor $
+Key1 Lock0 $
