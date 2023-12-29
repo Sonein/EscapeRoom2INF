@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
 namespace Learnin;
@@ -16,7 +15,7 @@ public partial class Play : Button
 	
 	public override void _Process(double delta)
 	{
-		this.Text = _inGame ? "UNPLAY" : "PLAY";
+		Text = _inGame ? "UNPLAY" : "PLAY";
 	}
 	
 	private void _on_button_down()
@@ -42,7 +41,6 @@ public partial class Play : Button
 		{
 			foreach (var variableNode in nodes)
 			{
-				//in case, ze mame dalsie problemy s mazanim tak zamenik queuefree
 				variableNode.Free();
 			}
 			nodes.Clear();

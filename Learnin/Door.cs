@@ -10,20 +10,13 @@ public partial class Door : Polygon2D
 	private bool _isDragging;
 	private bool _inGame;
 	private bool _unlocked;
-	private string _type;
 	private Vector2 _ironMouseOffset;
-	private Dictionary<string, bool> _accepts;
 	private List<string> _locks;
 	
 	public override void _Ready()
 	{
-		_accepts = new Dictionary<string, bool>();
 		_locks = new List<string>();
-		_accepts.Add("key", false);
-		_accepts.Add("lock", false);
-		_accepts.Add("door", false);
 		_unlocked = true;
-		_type = "door";
 	}
 	
 	public override void _Process(double delta)
@@ -61,7 +54,7 @@ public partial class Door : Polygon2D
 			{
 				if (@event.IsPressed())
 				{
-					_ironMouseOffset = this.Position - GetGlobalMousePosition();
+					_ironMouseOffset = Position - GetGlobalMousePosition();
 					_isDragging = true;
 				}
 				else if (@event.IsReleased())
@@ -80,7 +73,7 @@ public partial class Door : Polygon2D
 					SetInternals("select");
 				}
 			}
-			if (@event is InputEventMouseButton { DoubleClick: true } && !_inGame)
+			if (@event is InputEventMouseButton { DoubleClick: true })
 			{
 				GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");	
 				GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
@@ -90,7 +83,7 @@ public partial class Door : Polygon2D
 	
 	private void FollowIronMouse()
 	{
-		this.Position = GetGlobalMousePosition() + _ironMouseOffset;
+		Position = GetGlobalMousePosition() + _ironMouseOffset;
 	}
 
 	private void SetInternals(string x)
@@ -128,7 +121,7 @@ public partial class Door : Polygon2D
 	
 	private string GetShapeType()
 	{
-		return _type;
+		return "door";
 	}
 
 	private void SigKill()
@@ -136,12 +129,9 @@ public partial class Door : Polygon2D
 		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
 		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
 		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
-		if (_locks.Any())
+		foreach (var lock1 in _locks)
 		{
-			foreach (var lock1 in _locks)
-			{
-				GetNode<Polygon2D>("/root/Main/" + lock1).Call("RemoveDoor", Name);
-			}
+			GetNode<Polygon2D>("/root/Main/" + lock1).Call("RemoveDoor", Name);
 		}
 		QueueFree();
 	}

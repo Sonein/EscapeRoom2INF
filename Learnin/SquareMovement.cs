@@ -1,27 +1,16 @@
-using System;
-using System.Collections.Generic;
 using Godot;
 
 namespace Learnin;
 
 public partial class SquareMovement : Polygon2D
 {
-	private Color _color;
 	private bool _isSelected;
 	private bool _isDragging;
 	private bool _inGame;
 	private Vector2 _ironMouseOffset;
-	private Dictionary<String, bool> _accepts;
-	private string _type;
 	
 	public override void _Ready()
 	{
-		this._color = this.Color;
-		this._accepts = new Dictionary<string, bool>();
-		_accepts.Add("key", false);
-		_accepts.Add("lock", false);
-		_accepts.Add("door", false);
-		_type = "none";
 	}
 	
 	public override void _Process(double delta)
@@ -46,8 +35,8 @@ public partial class SquareMovement : Polygon2D
 	}
 
 	private void FollowIronMouse()
-	{
-		this.Position = GetGlobalMousePosition() + _ironMouseOffset;
+	{ 
+		Position = GetGlobalMousePosition() + _ironMouseOffset;
 	}
 
 
@@ -75,7 +64,7 @@ public partial class SquareMovement : Polygon2D
 			{
 				if (@event.IsPressed())
 				{
-					_ironMouseOffset = this.Position - GetGlobalMousePosition();
+					_ironMouseOffset = Position - GetGlobalMousePosition();
 					_isDragging = true;
 				}
 				else if (@event.IsReleased())
@@ -104,7 +93,7 @@ public partial class SquareMovement : Polygon2D
 
 	private string GetShapeType()
 	{
-		return _type;
+		return "none";
 	}
 
 	private void SigKill()

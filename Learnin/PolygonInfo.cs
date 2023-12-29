@@ -17,6 +17,6 @@ public struct PolygonInfo
     public string Name { get; }
     public string Type { get; }
     public Vector2 Position { get; }
-    public Array<string> Connections { get; set; }
+    public Array<string> Connections { get; }
     public string Special { get; }
 }

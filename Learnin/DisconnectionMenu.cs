@@ -16,7 +16,7 @@ public partial class DisconnectionMenu : MenuButton
 	public override void _Ready()
 	{
 		_items = new System.Collections.Generic.Dictionary<string, int>();
-		_popupMenu = this.GetPopup();
+		_popupMenu = GetPopup();
 		Callable callable = new Callable(this, nameof(OnMenuItemSelected));
 		_popupMenu.Connect("id_pressed", callable);
 		_id = 0;
@@ -63,7 +63,7 @@ public partial class DisconnectionMenu : MenuButton
 		_toConnectToType = type;
 		foreach (string kirsch in has)
 		{
-			GD.Print(kirsch);
+			//GD.Print(kirsch);
 			AddItem(kirsch);
 		}
 	}

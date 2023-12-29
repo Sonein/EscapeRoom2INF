@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -18,7 +17,7 @@ public partial class ItemList : MenuButton
 	public override void _Ready()
 	{
 		_items = new System.Collections.Generic.Dictionary<Polygon2D, int>();
-		_popupMenu = this.GetPopup();
+		_popupMenu = GetPopup();
 		Callable callable = new Callable(this, nameof(OnMenuItemSelected));
 		_popupMenu.Connect("id_pressed", callable);
 		_id = 0;

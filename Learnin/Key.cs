@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -11,20 +10,13 @@ public partial class Key : Polygon2D
 	private bool _isDragging;
 	private bool _inGame;
 	private bool _unlocked;
-	private string _type;
 	private Vector2 _ironMouseOffset;
-	private System.Collections.Generic.Dictionary<string, bool> _accepts;
 	private System.Collections.Generic.Dictionary<string, Vector2[]> _locks;
 	
 	public override void _Ready()
 	{
-		_accepts = new System.Collections.Generic.Dictionary<string, bool>();
 		_locks = new System.Collections.Generic.Dictionary<string, Vector2[]>();
-		_accepts.Add("key", false);
-		_accepts.Add("lock", true);
-		_accepts.Add("door", false);
 		_unlocked = true;
-		_type = "key";
 	}
 
 	public override void _Process(double delta)
@@ -67,7 +59,7 @@ public partial class Key : Polygon2D
 		{
 			if (@event.IsPressed())
 			{
-				_ironMouseOffset = this.Position - GetGlobalMousePosition();
+				_ironMouseOffset = Position - GetGlobalMousePosition();
 				_isDragging = true;
 			}
 			else if (@event.IsReleased())
@@ -86,16 +78,19 @@ public partial class Key : Polygon2D
 				SetInternals("select");
 			}
 		}
-		if (@event is InputEventMouseButton { DoubleClick: true} && !_inGame)
+
+		if (@event is InputEventMouseButton { DoubleClick: true } && !_inGame)
 		{
-			GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("GenerateOptions", this, "lock");
-			GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ResetSelf", this, "key");
+			GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu")
+				.Call("GenerateOptions", this, "lock");
+			GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu")
+				.Call("ResetSelf", this, "key");
 		}
 	}
 	
 	private void FollowIronMouse()
 	{
-		this.Position = GetGlobalMousePosition() + _ironMouseOffset;
+		Position = GetGlobalMousePosition() + _ironMouseOffset;
 	}
 
 	private void SetInternals(string x)
@@ -121,14 +116,12 @@ public partial class Key : Polygon2D
 		//GD.Print(temp[0] + " " + temp[1]);
 		_unlocked = false;
 		_locks.Add(boi, temp);
-		//GetNode<Polygon2D>("/root/Main/" + boi).Call("AddKey", this);
 	}
 
 	private void RemoveLock(string boi)
 	{
 		if (!_locks.ContainsKey(boi)) return;
 		_locks.Remove(boi);
-		//GetNode<Polygon2D>("/root/Main/" + boi).Call("RemoveKey", this);
 	}
 
 	private void FindingLock()
@@ -137,8 +130,8 @@ public partial class Key : Polygon2D
 		foreach (var pippa in _locks)
 		{
 			//GD.Print(Position.X + "," + Position.Y + "/" + pippa.Value[0].X + "," + pippa.Value[0].Y + "/" + pippa.Value[1].X + "," + pippa.Value[1].Y);
-			if ((this.Position.X >= pippa.Value[0].X && this.Position.Y >= pippa.Value[0].Y)
-				&& (this.Position.X <= pippa.Value[1].X && this.Position.Y <= pippa.Value[1].Y))
+			if ((Position.X >= pippa.Value[0].X && Position.Y >= pippa.Value[0].Y)
+				&& (Position.X <= pippa.Value[1].X && Position.Y <= pippa.Value[1].Y))
 			{
 				GetNode<Polygon2D>("/root/Main/" + pippa.Key).Call("RemoveKey", this);
 				thePippa = pippa.Key;
@@ -163,7 +156,7 @@ public partial class Key : Polygon2D
 	
 	private string GetShapeType()
 	{
-		return _type;
+		return "key";
 	}
 
 	private void SigKill()
@@ -171,12 +164,9 @@ public partial class Key : Polygon2D
 		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
 		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
 		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
-		if (_locks.Any())
+		foreach (var boi in _locks)
 		{
-			foreach (var boi in _locks)
-			{
-				GetNode<Polygon2D>("/root/Main/" + boi.Key).Call("RemoveKey", this);
-			}
+			GetNode<Polygon2D>("/root/Main/" + boi.Key).Call("RemoveKey", this);
 		}
 		QueueFree();
 	}
