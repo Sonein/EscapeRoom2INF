@@ -3,9 +3,13 @@ Xdoor door 1122 232 $
 Xdoor2 door 500 500 $
 Lock0 lock 684 85 $
 Key1 key 978 125 $
+Key0 key 1132 98 $
+Lock1 lock 833 446 $
 #
 CodeLock0 Xdoor Xdoor2 $
 Xdoor $
 Xdoor2 $
 Lock0 Xdoor $
-Key1 Lock0 $
+Key1 Lock0 Lock1 $
+Key0 Lock0 $
+Lock1 $

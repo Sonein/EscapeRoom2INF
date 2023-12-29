@@ -18,15 +18,15 @@ public partial class HideMenu : Button
 	{
 		if (!_left)
 		{
-			this.RotationDegrees += 180;
-			this.Position += new Vector2(48, 48);
+			RotationDegrees += 180;
+			Position += new Vector2(48, 48);
 			_left = true;
 			GetNode<Polygon2D>("/root/Main/Menu").Position += new Vector2(420, 0);
 		}
 		else
 		{
-			this.RotationDegrees -= 180;
-			this.Position -= new Vector2(48, 48);
+			RotationDegrees -= 180;
+			Position -= new Vector2(48, 48);
 			_left = false;
 			GetNode<Polygon2D>("/root/Main/Menu").Position -= new Vector2(420, 0);
 		}

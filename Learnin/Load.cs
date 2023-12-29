@@ -28,7 +28,6 @@ public partial class Load : Button
 			var nodes = node.Call("GetNodes").AsGodotArray<Polygon2D>();
 			foreach (var variableNode in nodes)
 			{
-				//in case, ze mame dalsie problemy s mazanim tak zamenik queuefree
 				variableNode.Free();
 			}
 			nodes.Clear();
@@ -59,7 +58,7 @@ public partial class Load : Button
 		{
 			Polygon2D tempPolygon = ObjectCreator.Create(polygonInfo.Name, polygonInfo.Type, polygonInfo.Position, polygonInfo.Special);
 			GetNode<Node>("/root/Main").AddChild(tempPolygon);
-			GetNode<Node>("/root/Main/Menu/ItemList/ListMenu").Call("AddItem", tempPolygon);
+			node.Call("AddItem", tempPolygon);
 		}
 
 		foreach (var polygonInfo in polygonInfos)

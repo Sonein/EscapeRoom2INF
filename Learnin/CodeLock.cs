@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -12,21 +11,14 @@ public partial class CodeLock : Polygon2D
 	private bool _inGame;
 	private bool _unlocked;
 	private string _code;
-	private string _type;
 	private Vector2 _ironMouseOffset;
-	private System.Collections.Generic.Dictionary<string, bool> _accepts;
 	private List<string> _doors;
 	private TextEdit _dynamicText;
 	
 	public override void _Ready()
 	{
-		_accepts = new System.Collections.Generic.Dictionary<string, bool>();
-		_accepts.Add("key", false);
-		_accepts.Add("lock", false);
-		_accepts.Add("door", true);
 		_doors = new List<string>();
-		_dynamicText = (TextEdit)this.GetChildren()[0];
-		_type = "code";
+		_dynamicText = (TextEdit)GetChildren()[0];
 	}
 
 	public override void _Process(double delta)
@@ -68,7 +60,7 @@ public partial class CodeLock : Polygon2D
 			{
 				if (@event.IsPressed())
 				{
-					_ironMouseOffset = this.Position - GetGlobalMousePosition();
+					_ironMouseOffset = Position - GetGlobalMousePosition();
 					_isDragging = true;
 				}
 				else if (@event.IsReleased())
@@ -87,7 +79,7 @@ public partial class CodeLock : Polygon2D
 					SetInternals("select");
 				}
 			}
-			if (@event is InputEventMouseButton { DoubleClick: true } && !_inGame)
+			if (@event is InputEventMouseButton { DoubleClick: true })
 			{
 				GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("GenerateOptions", this, "door");
 				GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ResetSelf", this, "code");
@@ -110,7 +102,7 @@ public partial class CodeLock : Polygon2D
 	
 	private void FollowIronMouse()
 	{
-		this.Position = GetGlobalMousePosition() + _ironMouseOffset;
+		Position = GetGlobalMousePosition() + _ironMouseOffset;
 	}
 
 	private void SetInternals(string x)
@@ -141,14 +133,12 @@ public partial class CodeLock : Polygon2D
 	{
 		if (_doors.Contains(door)) return;
 		_doors.Add(door);
-		//GetNode<Polygon2D>("/root/Main/" + door).Call("AddLock", this);
 	}
 
 	private void RemoveDoor(string door)
 	{
 		if (!_doors.Contains(door)) return;
 		_doors.Remove(door);
-		//GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
 	}
 	
 	private Array<string> GiveUpYourList()
@@ -158,7 +148,7 @@ public partial class CodeLock : Polygon2D
 	
 	private string GetShapeType()
 	{
-		return _type;
+		return "code";
 	}
 
 	private string GetCode()
@@ -176,12 +166,9 @@ public partial class CodeLock : Polygon2D
 		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
 		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
 		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
-		if (_doors.Any())
+		foreach (var door in _doors)
 		{
-			foreach (var door in _doors)
-			{
-				GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
-			}
+			GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
 		}
 		QueueFree();
 	}

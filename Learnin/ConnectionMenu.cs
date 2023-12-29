@@ -4,7 +4,6 @@ namespace Learnin;
 
 public partial class ConnectionMenu : MenuButton
 {
-	private System.Collections.Generic.Dictionary<Node, int> _items;
 	private PopupMenu _popupMenu;
 	private bool _inGame;
 	private int _id;
@@ -13,8 +12,7 @@ public partial class ConnectionMenu : MenuButton
 	
 	public override void _Ready()
 	{
-		_items = new System.Collections.Generic.Dictionary<Node, int>();
-		_popupMenu = this.GetPopup();
+		_popupMenu = GetPopup();
 		Callable callable = new Callable(this, nameof(OnMenuItemSelected));
 		_popupMenu.Connect("id_pressed", callable);
 		_id = 0;
@@ -42,14 +40,13 @@ public partial class ConnectionMenu : MenuButton
 		_toConnectTo = node;
 		_toConnectToType = (string)node.Call("GetShapeType");
 		var nodes = GetNode<Node>("/root/Main/Menu/ItemList/ListMenu").Call("GetNodes").AsGodotArray();
-		GD.Print(nodes);
+		//GD.Print(nodes);
 		foreach (Node x in nodes)
 		{
 			string nodeType = (string)x.Call("GetShapeType");
-			GD.Print(nodeType + " " + _toConnectToType);
+			//GD.Print(nodeType + " " + _toConnectToType);
 			if (nodeType.Equals(type))
 			{
-				_items.Add(x, _id);
 				_popupMenu.AddItem(x.Name, _id++);
 			}
 		}
@@ -69,7 +66,6 @@ public partial class ConnectionMenu : MenuButton
 	private void ClearSelf()
 	{
 		_toConnectTo = null;
-		_items.Clear();
 		_popupMenu.Clear();
 		_id = 0;
 	}
