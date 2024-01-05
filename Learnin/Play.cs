@@ -7,10 +7,12 @@ public partial class Play : Button
 {
 	private bool _inGame;
 	private GameSaver _gameSaver;
+	private MovementManager _movementManager;
 	
 	public override void _Ready()
 	{
 		_gameSaver = new GameSaver();
+		_movementManager = MovementManager.Instance;
 	}
 	
 	public override void _Process(double delta)
@@ -41,8 +43,10 @@ public partial class Play : Button
 		{
 			foreach (var variableNode in nodes)
 			{
+				_movementManager.Remove(variableNode);
 				variableNode.Free();
 			}
+			
 			nodes.Clear();
 			CallDeferred("Rebuild", node);
 		} 

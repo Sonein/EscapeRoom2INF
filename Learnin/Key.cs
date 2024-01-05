@@ -12,17 +12,21 @@ public partial class Key : Polygon2D
 	private bool _unlocked;
 	private Vector2 _ironMouseOffset;
 	private System.Collections.Generic.Dictionary<string, Vector2[]> _locks;
+	private MovementManager _movementManager;
 	
 	public override void _Ready()
 	{
 		_locks = new System.Collections.Generic.Dictionary<string, Vector2[]>();
 		_unlocked = true;
+		_movementManager = MovementManager.Instance;
+		_movementManager.Add(this);
 	}
 
 	public override void _Process(double delta)
 	{
 		if (_isDragging)
 		{
+			_isDragging = _movementManager.CanMove(this);
 			FollowIronMouse();
 		}
 
@@ -31,6 +35,7 @@ public partial class Key : Polygon2D
 			if (_unlocked)
 			{
 				GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+				_movementManager.Remove(this);
 				QueueFree();
 			}
 			else
@@ -57,18 +62,10 @@ public partial class Key : Polygon2D
 	{
 		if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left })
 		{
-			if (@event.IsPressed())
+			_isDragging = _movementManager.StartMove(@event, GetGlobalMousePosition(), Position, this);
+			if (_isDragging)
 			{
-				_ironMouseOffset = Position - GetGlobalMousePosition();
-				_isDragging = true;
-			}
-			else if (@event.IsReleased())
-			{
-				_isDragging = false;
-			}
-			else
-			{
-				_isDragging = false;
+				_ironMouseOffset = _movementManager.IronmouseOffset;
 			}
 		}
 		else if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Right } && !_inGame)
@@ -105,6 +102,17 @@ public partial class Key : Polygon2D
 				break;
 			case "play":
 				_inGame = !_inGame;
+				if (_inGame)
+				{
+					foreach (var key in _locks.Keys)
+					{
+						_locks[key] = new[]
+						{
+							GetNode<Polygon2D>("/root/Main/" + key).Position,
+							GetNode<Polygon2D>("/root/Main/" + key).Position + new Vector2(175, 175)
+						};
+					}
+				}
 				break;
 		}
 	}
@@ -112,7 +120,7 @@ public partial class Key : Polygon2D
 	private void AddLock(string boi)
 	{
 		if (_locks.ContainsKey(boi)) return;
-		Vector2[] temp = new []{GetNode<Polygon2D>("/root/Main/" + boi).Position, GetNode<Polygon2D>("/root/Main/" + boi).Position + new Vector2(175, 175)};
+		Vector2[] temp = new []{new Vector2(), new Vector2()};
 		//GD.Print(temp[0] + " " + temp[1]);
 		_unlocked = false;
 		_locks.Add(boi, temp);
@@ -168,6 +176,7 @@ public partial class Key : Polygon2D
 		{
 			GetNode<Polygon2D>("/root/Main/" + boi.Key).Call("RemoveKey", this);
 		}
+		_movementManager.Remove(this);
 		QueueFree();
 	}
 }
