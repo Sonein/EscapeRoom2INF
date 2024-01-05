@@ -14,17 +14,20 @@ public partial class CodeLock : Polygon2D
 	private Vector2 _ironMouseOffset;
 	private List<string> _doors;
 	private TextEdit _dynamicText;
+	private MovementManager _movementManager;
 	
 	public override void _Ready()
 	{
 		_doors = new List<string>();
 		_dynamicText = (TextEdit)GetChildren()[0];
+		_movementManager = MovementManager.Instance;
 	}
 
 	public override void _Process(double delta)
 	{
 		if (_isDragging)
 		{
+			_isDragging = _movementManager.CanMove(this);
 			FollowIronMouse();
 		}
 
@@ -35,6 +38,7 @@ public partial class CodeLock : Polygon2D
 				GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
 			}
 			GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+			_movementManager.Remove(this);
 			QueueFree();
 		}
 	}
@@ -58,18 +62,10 @@ public partial class CodeLock : Polygon2D
 		{
 			if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left)
 			{
-				if (@event.IsPressed())
+				_isDragging = _movementManager.StartMove(@event, GetGlobalMousePosition(), Position, this);
+				if (_isDragging)
 				{
-					_ironMouseOffset = Position - GetGlobalMousePosition();
-					_isDragging = true;
-				}
-				else if (@event.IsReleased())
-				{
-					_isDragging = false;
-				}
-				else
-				{
-					_isDragging = false;
+					_ironMouseOffset = _movementManager.IronmouseOffset;
 				}
 			}
 			else if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Right)
@@ -170,6 +166,7 @@ public partial class CodeLock : Polygon2D
 		{
 			GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);
 		}
+		_movementManager.Remove(this);
 		QueueFree();
 	}
 }

@@ -12,23 +12,28 @@ public partial class Door : Polygon2D
 	private bool _unlocked;
 	private Vector2 _ironMouseOffset;
 	private List<string> _locks;
+	private MovementManager _movementManager;
 	
 	public override void _Ready()
 	{
 		_locks = new List<string>();
 		_unlocked = true;
+		_movementManager = MovementManager.Instance;
+		_movementManager.Add(this);
 	}
 	
 	public override void _Process(double delta)
 	{
 		if (_isDragging)
 		{
+			_isDragging = _movementManager.CanMove(this);
 			FollowIronMouse();
 		}
 
 		if (_inGame && _unlocked)
 		{
 			GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
+			_movementManager.Remove(this);
 			QueueFree();
 		}
 	}
@@ -52,18 +57,10 @@ public partial class Door : Polygon2D
 		{
 			if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left)
 			{
-				if (@event.IsPressed())
+				_isDragging = _movementManager.StartMove(@event, GetGlobalMousePosition(), Position, this);
+				if (_isDragging)
 				{
-					_ironMouseOffset = Position - GetGlobalMousePosition();
-					_isDragging = true;
-				}
-				else if (@event.IsReleased())
-				{
-					_isDragging = false;
-				}
-				else
-				{
-					_isDragging = false;
+					_ironMouseOffset = _movementManager.IronmouseOffset;
 				}
 			}
 			else if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Right)
@@ -133,6 +130,7 @@ public partial class Door : Polygon2D
 		{
 			GetNode<Polygon2D>("/root/Main/" + lock1).Call("RemoveDoor", Name);
 		}
+		_movementManager.Remove(this);
 		QueueFree();
 	}
 }
