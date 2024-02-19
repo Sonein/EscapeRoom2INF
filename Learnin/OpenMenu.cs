@@ -1,4 +1,5 @@
 using Godot;
+using Learnin.Statics;
 
 namespace Learnin;
 
@@ -47,6 +48,10 @@ public partial class OpenMenu : MenuButton
 				case 4:
 					name = "Key" + _id;
 					tempPolygon = ObjectCreator.Create(name, "key", position, null);
+					break;
+				case 5:
+					name = "CipherLock" + _id;
+					tempPolygon = ObjectCreator.Create(name, "cipher", position, null);
 					break;
 			}
 
