@@ -27,8 +27,7 @@ public partial class Cipherlock : Polygon2D
 		_doors = new List<string>();
 		_dynamicText = (TextEdit)GetChildren()[0];
 		_movementManager = MovementManager.Instance;
-		_cipher = new Default();
-		_key = "";
+		((RichTextLabel)GetChildren()[3].GetChildren()[0]).Text = CipherCatalogue.GetTooltip("def");
 	}
 	
 	public override void _Process(double delta)
@@ -119,7 +118,7 @@ public partial class Cipherlock : Polygon2D
 		TextEdit from = (TextEdit)GetChildren()[2].GetChildren()[1];
 		RichTextLabel to = (RichTextLabel)GetChildren()[3].GetChildren()[0];
 		to.Text = CipherCatalogue.GetTooltip(from.Text);
-		GD.Print(from.Text);
+		//GD.Print(from.Text);
 	}
 	
 	private void FollowIronMouse()
@@ -179,6 +178,7 @@ public partial class Cipherlock : Polygon2D
 
 	private string GetSpecial()
 	{
+		GD.Print(_cipher.Type());
 		return _cipher.Decrypt(_code) + " " + _key + " " + _cipher.Type(); 
 	}
 

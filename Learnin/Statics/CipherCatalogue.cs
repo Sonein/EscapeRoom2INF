@@ -6,41 +6,31 @@ public class CipherCatalogue
 {
     public static ICipher GetCipher(string type)
     {
-        ICipher cipher = new Default();
         switch (type)
         {
             case "b64f":
-                cipher = new Base64Full();
-                break;
+                return new Base64Full();
             case "b648b":
-                cipher = new Base648Bit();
-                break;
+                return new Base648Bit();
             case "caesar":
-                cipher = new Caesar();
-                break;
+                return new Caesar();
             case "coltrans":
-                cipher = new ColumnarTransposition();
-                break;
+                return new ColumnarTransposition();
             case "cycle":
-                cipher = new CyclicPermutation();
-                break;
+                return new CyclicPermutation();
             case "def":
-                cipher = new Default();
-                break;
+                return new Default();
             case "caesarl":
-                cipher = new LameCaesar();
-                break;
+                return new LameCaesar();
             case "rail":
-                cipher = new RailFence();
-                break;
+                return new RailFence();
             case "scytale":
-                cipher = new Scytale();
-                break;
+                return new Scytale();
             case "vigenere":
-                cipher = new Vigenere();
-                break;
+                return new Vigenere();
+            default:
+                return new Default();
         }
-        return cipher;
     }
 
     public static string GetTooltip(string type)

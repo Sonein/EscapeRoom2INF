@@ -5,7 +5,7 @@ Lock0 lock 684 85  $
 Key1 key 978 125  $
 Key0 key 1132 98  $
 Lock1 lock 833 446  $
-CipherLock0 cipher 457 187 stlcaey  def $
+CipherLock0 cipher 457 187 scytale 3 scytale $
 #
 CodeLock0 Xdoor Xdoor2 $
 Xdoor $
