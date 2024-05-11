@@ -53,6 +53,10 @@ public partial class OpenMenu : MenuButton
 					name = "CipherLock" + _id;
 					tempPolygon = ObjectCreator.Create(name, "cipher", position, null);
 					break;
+				case 6:
+					name = "GraphLock" + _id;
+					tempPolygon = ObjectCreator.Create(name, "graph", position, null);
+					break;
 			}
 
 			if (tempPolygon != null)

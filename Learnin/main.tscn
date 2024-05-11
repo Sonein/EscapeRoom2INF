@@ -27,7 +27,7 @@ offset_right = 1872.0
 offset_bottom = 200.0
 theme_override_font_sizes/font_size = 45
 text = "ADD ITEM"
-item_count = 6
+item_count = 7
 popup/item_0/text = "Square"
 popup/item_0/id = 0
 popup/item_1/text = "Door"
@@ -40,6 +40,8 @@ popup/item_4/text = "Key"
 popup/item_4/id = 4
 popup/item_5/text = "Cipher Lock"
 popup/item_5/id = 5
+popup/item_6/text = "Graph Lock"
+popup/item_6/id = 6
 script = ExtResource("1_dvupd")
 
 [node name="ItemList" type="Polygon2D" parent="Menu"]

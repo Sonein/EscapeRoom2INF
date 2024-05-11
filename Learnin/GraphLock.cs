@@ -1,35 +1,33 @@
 using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
-using Learnin.Ciphers;
 using Learnin.Statics;
+using Learnin.Types;
 
 namespace Learnin;
 
-public partial class Cipherlock : Polygon2D
+public partial class GraphLock : Polygon2D
 {
+	private Graph _graph;
+	private TextEdit _dimension;
 	private bool _isSelected;
 	private bool _isDragging;
 	private bool _inGame;
 	private bool _unlocked;
-	private string _code;
-	private string _eCode;
-	private string _key;
 	private Vector2 _ironMouseOffset;
 	private List<string> _doors;
-	private TextEdit _dynamicText;
 	private MovementManager _movementManager;
-	private ICipher _cipher;
+	private Polygon2D _board;
 	
 	public override void _Ready()
 	{
-		((Polygon2D)GetChildren()[2]).Visible = false;
-		((Polygon2D)GetChildren()[3]).Visible = false;
+		_graph = new Graph(0, 0);
+		_board = (Polygon2D)GetChildren()[4];
+		_board.Visible = false;
 		_doors = new List<string>();
-		_dynamicText = (TextEdit)GetChildren()[0];
+		_dimension = (TextEdit)GetChildren()[1];
 		_movementManager = MovementManager.Instance;
 		_movementManager.Add(this);
-		((RichTextLabel)GetChildren()[3].GetChildren()[0]).Text = CipherCatalogue.GetTooltip("def");
 	}
 	
 	public override void _Process(double delta)
@@ -39,7 +37,7 @@ public partial class Cipherlock : Polygon2D
 			_isDragging = _movementManager.CanMove(this);
 			FollowIronMouse();
 		}
-
+		
 		if (_inGame && _unlocked)
 		{
 			foreach (var door in _doors)
@@ -54,7 +52,6 @@ public partial class Cipherlock : Polygon2D
 	
 	public override void _Input(InputEvent @event)
 	{
-		//TODO safety pri davani kodu
 		if (@event is InputEventKey eventKey && eventKey.Pressed && _isSelected)
 		{
 			switch (eventKey.Keycode)
@@ -66,7 +63,7 @@ public partial class Cipherlock : Polygon2D
 		}
 	}
 	
-	private void _on_area_2d_input_event(Node viewport, InputEvent @event, long shape_idx)
+	private void _on_area_2d_input_event(Godot.Node viewport, InputEvent @event, long shape_idx)
 	{
 		if (!_inGame)
 		{
@@ -87,72 +84,67 @@ public partial class Cipherlock : Polygon2D
 			}
 			if (@event is InputEventMouseButton { DoubleClick: true })
 			{
-				GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("GenerateOptions", this, "door");
-				GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ResetSelf", this, "cipher");
+				GetNode<Godot.Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("GenerateOptions", this, "door");
+				GetNode<Godot.Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ResetSelf", this, "graph");
 			}
 		}
 	}
 
 
-	private void _on_text_edit_text_changed()
+	private void _on_submit_button_down()
 	{
-		if (_inGame && _code.Equals(_dynamicText.Text))
+		if (!_inGame)
 		{
-			GD.Print(_code + " " + _dynamicText.Text);
-			_unlocked = true;
+			string sinder = _dimension.Text;
+			Scanner scanner = new Scanner(sinder);
+			if (scanner.HasNextInt())
+			{
+				int pup1 = scanner.NextInt();
+				if (scanner.HasNextInt())
+				{
+					int pup2 = scanner.NextInt();
+					_graph = new Graph(pup1, pup2);
+					//TODO add smol shits to board
+				}
+			}
 		}
 	}
 
 
-	private void _on_button_button_down()
+	private void _on_set_button_down()
 	{
-		string pass = ((TextEdit)GetChildren()[2].GetChildren()[0]).Text;
-		string cipher = ((TextEdit)GetChildren()[2].GetChildren()[1]).Text;
-		string key = ((TextEdit)GetChildren()[2].GetChildren()[2]).Text;
-		_cipher = CipherCatalogue.GetCipher(cipher);
-		_key = key;
-		_eCode = _cipher.Encrypt(pass, key);
-		_code = pass;
-		((Label)GetChildren()[4]).Text = _eCode;
-		GD.Print(_code);
-	}
-	
-	private void _on_text_edit_2_text_changed()
-	{
-		TextEdit from = (TextEdit)GetChildren()[2].GetChildren()[1];
-		RichTextLabel to = (RichTextLabel)GetChildren()[3].GetChildren()[0];
-		to.Text = CipherCatalogue.GetTooltip(from.Text);
-		//GD.Print(from.Text);
+		//TODO parse board and check hamilton
 	}
 	
 	private void FollowIronMouse()
 	{
 		Position = GetGlobalMousePosition() + _ironMouseOffset;
 	}
-
+	
 	private void SetInternals(string x)
 	{
 		switch (x)
 		{
 			case "select":
 				_isSelected = !_isSelected;
-				((Polygon2D)GetChildren()[2]).Visible = _isSelected;
-				((Polygon2D)GetChildren()[3]).Visible = _isSelected;
+				_board.Visible = _isSelected;
 				break;
 			case "drag":
 				_isDragging = !_isDragging;
 				break;
 			case "play":
 				_inGame = !_inGame;
+				_dimension.Visible = false;
+				_board.Visible = false;
+				((Button)GetChildren()[2]).Visible = false;
 				if (_inGame)
 				{
-					_dynamicText.Clear();
-					if (string.IsNullOrEmpty(_code))
+					_dimension.Clear();
+					if (_graph.GetSize().Item1 == 0 || _graph.GetSize().Item2 == 0)
 					{
 						_unlocked = true;
 					}
-					((Polygon2D)GetChildren()[2]).Visible = false;
-					((Polygon2D)GetChildren()[3]).Visible = false;
+					_board.Visible = true;
 				}
 				break;
 		}
@@ -177,34 +169,30 @@ public partial class Cipherlock : Polygon2D
 	
 	private string GetShapeType()
 	{
-		return "cipher";
+		return "graph";
 	}
 
 	private string GetSpecial()
 	{
-		GD.Print(_cipher.Type());
-		return _code + " " + _key + " " + _cipher.Type(); 
+		return _graph.ToString();
 	}
 
 	private void SetSpecial(string special)
 	{
 		Scanner scanner = new Scanner(special);
-		string code = scanner.Next();
-		string key = scanner.Next();
-		string cipher = scanner.Next();
-		_cipher = CipherCatalogue.GetCipher(cipher);
-		_key = key;
-		_code = code;
-		_eCode = _cipher.Encrypt(code, _key);
-		((Label)GetChildren()[4]).Text = _eCode;
-		
+		int x = scanner.NextInt();
+		int y = scanner.NextInt();
+		string states = scanner.Next();
+		string edges = scanner.Next();
+		_graph = new Graph(x, y);
+		_graph.FromString(states, edges);
 	}
 
 	private void SigKill()
 	{
 		GetNode<MenuButton>("/root/Main/Menu/ItemList/ListMenu").Call("RemoveItem", this);
-		GetNode<Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
-		GetNode<Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
+		GetNode<Godot.Node>("/root/Main/Menu/EditMenu/ConnectionList/ConnectionMenu").Call("ClearSelf");
+		GetNode<Godot.Node>("/root/Main/Menu/EditMenu/DisconnectionList/DisconnectionMenu").Call("ClearSelf");
 		foreach (var door in _doors)
 		{
 			GetNode<Polygon2D>("/root/Main/" + door).Call("RemoveLock", this);

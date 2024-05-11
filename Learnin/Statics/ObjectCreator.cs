@@ -54,6 +54,22 @@ public class ObjectCreator
                     temp.Call("SetSpecial", special);
                 }
                 break;
+            case "graph":
+                packedScene = (PackedScene)GD.Load("res://graphlock.tscn");
+                temp = (Polygon2D)packedScene.Instantiate();
+                temp.Name = name;
+                temp.Position = position;
+                if (special != null)
+                {
+                    temp.Call("SetSpecial", special);
+                }
+                break;
+            case "smol":
+                packedScene = (PackedScene)GD.Load("res://smolnode.tscn");
+                temp = (Polygon2D)packedScene.Instantiate();
+                temp.Name = name;
+                temp.Position = position;
+                break;
         }
         return temp;
     }

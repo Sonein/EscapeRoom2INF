@@ -86,6 +86,10 @@ offset_top = 352.0
 offset_right = 600.0
 offset_bottom = 544.0
 
+[node name="Lullaby" type="Label" parent="."]
+offset_right = 200.0
+offset_bottom = 56.0
+
 [connection signal="text_changed" from="TextEdit" to="." method="_on_text_edit_text_changed"]
 [connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
 [connection signal="text_changed" from="SettingBox/TextEdit2" to="." method="_on_text_edit_2_text_changed"]

@@ -25,6 +25,10 @@ public class ObjectConnector
                 caller.Call("AddDoor", called.Name);
                 called.Call("AddLock", caller);
                 break;
+            case "graph":
+                caller.Call("AddDoor", called.Name);
+                called.Call("AddLock", caller);
+                break;
         }
     }
 
@@ -45,6 +49,10 @@ public class ObjectConnector
                 called.Call("RemoveLock", caller);
                 break;
             case "cipher":
+                caller.Call("RemoveDoor", called.Name);
+                called.Call("RemoveLock", caller);
+                break;
+            case "graph":
                 caller.Call("RemoveDoor", called.Name);
                 called.Call("RemoveLock", caller);
                 break;

@@ -38,6 +38,12 @@ public class Graph
         string sinder = this._x + " " + this._y + " ";
         foreach (Node numi in this._vertices)
         {
+            sinder += numi.GetState() + ",";
+        }
+        sinder.Remove(sinder.Length - 1);
+        sinder += " ";
+        foreach (Node numi in this._vertices)
+        {
             foreach (int bao in numi.GetOutgoing())
             {
                 sinder += "[" + numi.GetIndex() +"," + bao +"]";
@@ -46,8 +52,18 @@ public class Graph
         return sinder;
     }
 
-    public void FromString(string input)
+    public void FromString(string blocks, string input)
     {
+        string[] lilFlames = blocks.Split(',');
+        int iFlame = 0;
+        foreach (string lilFlame in lilFlames)
+        {
+            if (Int32.TryParse(lilFlame, out int parsedFlame))
+            {
+                this._vertices[iFlame].SetExists(parsedFlame);
+            }
+            iFlame++;
+        }
         var pyroPups = Regex.Matches(input, @"\[\d+,\d+\]");
         foreach (Match pyroPup in pyroPups)
         {

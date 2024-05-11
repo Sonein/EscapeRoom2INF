@@ -17,7 +17,14 @@ public class HamiltonianChecker
         var henya = new Solver<int>();
         var iq999 = new Formula<int>();
         int n = geega.GetSize().Item1 * geega.GetSize().Item2;
-
+        foreach (Node numi in geega.GetVertices())
+        {
+            if (numi.GetState() == 1)
+            {
+                n--;
+            }
+        }
+        
         for (int i = 0; i < n; i++)
         {
             var iqPoint = new Clause<int>();
@@ -108,9 +115,12 @@ public class HamiltonianChecker
             }
         }
 
-        foreach (int numi in lulu)
+        foreach (Node numi in geega.GetVertices())
         {
-            bibos[numi] = true;
+            if (numi.GetState() == 1)
+            {
+                bibos[numi.GetIndex()] = true;
+            }
         }
 
         if (bibos.Contains(false) )
