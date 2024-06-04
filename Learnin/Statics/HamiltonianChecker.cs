@@ -17,7 +17,8 @@ public class HamiltonianChecker
         var henya = new Solver<int>();
         var iq999 = new Formula<int>();
         int n = geega.GetSize().Item1 * geega.GetSize().Item2;
-        foreach (Node numi in geega.GetVertices())
+        int n2 = n;
+        foreach (Node numi in geega._vertices)
         {
             if (numi.GetState() == 1)
             {
@@ -28,9 +29,9 @@ public class HamiltonianChecker
         for (int i = 0; i < n; i++)
         {
             var iqPoint = new Clause<int>();
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n2; j++)
             {
-                if (geega.GetVertices()[j].GetState() != 1)
+                if (geega._vertices[j].GetState() != 1)
                 {
                     iqPoint.Add(Literal.Of(Encode(i, j, n)));
                 }
@@ -40,11 +41,11 @@ public class HamiltonianChecker
 
         for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n2; j++)
             {
-                for (int k = j+1; k < n; k++)
+                for (int k = j+1; k < n2; k++)
                 {
-                    if (geega.GetVertices()[j].GetState() != 1 && geega.GetVertices()[k].GetState() != 1)
+                    if (geega._vertices[j].GetState() != 1 && geega._vertices[k].GetState() != 1)
                     {
                         iq999.Add(new Clause<int>
                             { Literal.Of(Encode(i, j, n)).Negate(), Literal.Of(Encode(i, k, n)).Negate() });
@@ -57,9 +58,9 @@ public class HamiltonianChecker
         {
             for (int j = i+1; j < n; j++)
             {
-                for (int k = 0; k < n; k++)
+                for (int k = 0; k < n2; k++)
                 {
-                    if (geega.GetVertices()[k].GetState() != 1)
+                    if (geega._vertices[k].GetState() != 1)
                     {
                         iq999.Add(new Clause<int>
                             { Literal.Of(Encode(i, k, n)).Negate(), Literal.Of(Encode(j, k, n)).Negate() });
@@ -69,15 +70,15 @@ public class HamiltonianChecker
         }
         
         var ggs = geega.GetAsMatrix();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n2; i++)
         {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n2; j++)
             {
                 if (!ggs[i][j] && i != j)
                 {
                     for (int k = 0; k < n; k++)
                     {
-                        if (geega.GetVertices()[i].GetState() != 1 && geega.GetVertices()[j].GetState() != 1)
+                        if (geega._vertices[i].GetState() != 1 && geega._vertices[j].GetState() != 1)
                         {
                             iq999.Add(new Clause<int>
                                 { Literal.Of(Encode(k, i, n)).Negate(), Literal.Of(Encode((k+1)%n, j, n)).Negate() });
@@ -105,7 +106,7 @@ public class HamiltonianChecker
 
         for (int i = 1; i < lulu.Count; i++)
         {
-            if (geega.GetVertices()[lulu[i - 1]].GetOutgoing().Contains(lulu[i]) && geega.GetVertices()[lulu[i]].GetState() != 1 && !bibos[lulu[i]])
+            if (geega._vertices[lulu[i - 1]].GetOutgoing().Contains(lulu[i]) && geega._vertices[lulu[i]].GetState() != 1 && !bibos[lulu[i]])
             {
                 bibos[lulu[i]] = true;
             }
@@ -115,7 +116,7 @@ public class HamiltonianChecker
             }
         }
 
-        foreach (Node numi in geega.GetVertices())
+        foreach (Node numi in geega._vertices)
         {
             if (numi.GetState() == 1)
             {

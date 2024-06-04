@@ -73,6 +73,7 @@ offset_right = 1872.0
 offset_bottom = 576.0
 text = "Connect To Item"
 script = ExtResource("3_5o7a2")
+metadata/_edit_use_anchors_ = true
 
 [node name="DisconnectionList" type="Polygon2D" parent="Menu/EditMenu"]
 color = Color(0.301961, 0.333333, 0.701961, 1)
