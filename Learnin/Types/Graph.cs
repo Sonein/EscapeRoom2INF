@@ -6,7 +6,7 @@ namespace Learnin.Types;
 
 public class Graph
 {
-    private List<Node> _vertices;
+    public List<Node> _vertices;
     private readonly int _x;
     private readonly int _y;
 
@@ -18,7 +18,7 @@ public class Graph
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++)
             {
-                _vertices.Add(new Node(i*y + j));
+                _vertices.Add(new Node(j*x + i));
             }
         }
     }
@@ -26,11 +26,6 @@ public class Graph
     public Tuple<int, int> GetSize()
     {
         return new Tuple<int, int>(this._x,this._y);
-    }
-
-    public List<Node> GetVertices()
-    {
-        return this._vertices;
     }
 
     public override string ToString()
@@ -64,26 +59,31 @@ public class Graph
             }
             iFlame++;
         }
-        var pyroPups = Regex.Matches(input, @"\[\d+,\d+\]");
-        foreach (Match pyroPup in pyroPups)
+        
+        if (!string.IsNullOrEmpty(input))
         {
-            string[] flames = pyroPup.Value.Trim('[', ']').Split(',');
-            if (flames.Length == 2)
+            var pyroPups = Regex.Matches(input, @"\[\d+,\d+\]");
+            
+            foreach (Match pyroPup in pyroPups)
             {
-                if (Int32.TryParse(flames[0], out int firstFlame) && Int32.TryParse(flames[1], out int secondFlame))
+                string[] flames = pyroPup.Value.Trim('[', ']').Split(',');
+                if (flames.Length == 2)
                 {
-                    this._vertices[firstFlame].AddOutgoing(secondFlame);
-                }
-                else
-                {
-                    this._vertices = new List<Node>();
-                    for (int i = 0; i < this._x; i++) {
-                        for (int j = 0; j < this._y; j++)
-                        {
-                            _vertices.Add(new Node(i*this._y + this._y));
-                        }
+                    if (Int32.TryParse(flames[0], out int firstFlame) && Int32.TryParse(flames[1], out int secondFlame))
+                    {
+                        this._vertices[firstFlame].AddOutgoing(secondFlame);
                     }
-                    break;
+                    else
+                    {
+                        this._vertices = new List<Node>();
+                        for (int i = 0; i < this._x; i++) {
+                            for (int j = 0; j < this._y; j++)
+                            {
+                                _vertices.Add(new Node(i*this._y + this._y));
+                            }
+                        }
+                        break;
+                    }
                 }
             }
         }

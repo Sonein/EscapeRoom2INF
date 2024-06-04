@@ -69,6 +69,10 @@ public class ObjectCreator
                 temp = (Polygon2D)packedScene.Instantiate();
                 temp.Name = name;
                 temp.Position = position;
+                if (special != null)
+                {
+                    temp.Call("SetSpecial", special);
+                }
                 break;
         }
         return temp;
