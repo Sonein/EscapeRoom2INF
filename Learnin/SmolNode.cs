@@ -10,8 +10,11 @@ public partial class SmolNode : Polygon2D
 	
 	public override void _Ready()
 	{
-		this._state = 0;
-		this.Color = Colors.SkyBlue;
+		if (this.Color != Colors.PaleVioletRed)
+		{
+			this._state = 0;
+			this.Color = Colors.SkyBlue;
+		}
 	}
 	
 	public override void _Process(double delta)
@@ -27,13 +30,19 @@ public partial class SmolNode : Polygon2D
 				if (this.Color == Colors.SkyBlue)
 				{
 					//TODO iba ak je v chaine
-					this.Color = Colors.PaleGreen;
-					this._state = 2;
+					if ((bool)GetParent().GetParent().Call("CanAdd", _id))
+					{
+						this.Color = Colors.PaleGreen;
+						this._state = 2;
+					}
 				}
 				else
 				{
-					this.Color = Colors.SkyBlue;
-					this._state = 0;
+					if ((bool)GetParent().GetParent().Call("CanRemove", _id))
+					{
+						this.Color = Colors.SkyBlue;
+						this._state = 0;
+					}
 				}
 			}
 			else
@@ -65,5 +74,14 @@ public partial class SmolNode : Polygon2D
 	private void SetState(int ina)
 	{
 		this._state = ina;
+		if (!_inGame && ina == 1)
+		{
+			this.Color = Colors.PaleVioletRed;
+		}
+	}
+
+	private void Gamin()
+	{
+		_inGame = !_inGame;
 	}
 }

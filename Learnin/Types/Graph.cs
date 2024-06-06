@@ -15,10 +15,10 @@ public class Graph
         this._vertices = new List<Node>();
         this._x = x;
         this._y = y;
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++)
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++)
             {
-                _vertices.Add(new Node(j*x + i));
+                _vertices.Add(new Node(i * x + j));
             }
         }
     }

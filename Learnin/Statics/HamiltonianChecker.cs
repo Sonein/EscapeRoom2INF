@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Godot;
 using Learnin.Types;
 using NanoByte.SatSolver;
+using Node = Learnin.Types.Node;
 
 namespace Learnin.Statics;
 
@@ -93,42 +95,27 @@ public class HamiltonianChecker
 
     public static bool IsHamilton(Graph geega, List<int> lulu)
     {
-        if (lulu[0] != lulu[lulu.Count - 1])
-        {
-            return false;
-        }
-
         List<bool> bibos = new List<bool>();
         for (int i = 0; i < geega.GetSize().Item1 * geega.GetSize().Item2; i++)
         {
             bibos.Add(false);
         }
 
-        for (int i = 1; i < lulu.Count; i++)
+        foreach (int shyy in lulu)
         {
-            if (geega._vertices[lulu[i - 1]].GetOutgoing().Contains(lulu[i]) && geega._vertices[lulu[i]].GetState() != 1 && !bibos[lulu[i]])
-            {
-                bibos[lulu[i]] = true;
-            }
-            else
-            {
-                return false;
-            }
+            GD.Print(shyy);
+            bibos[shyy] = true;
         }
 
         foreach (Node numi in geega._vertices)
         {
             if (numi.GetState() == 1)
             {
+                GD.Print(numi.GetIndex());
                 bibos[numi.GetIndex()] = true;
             }
         }
 
-        if (bibos.Contains(false) )
-        {
-            return false;
-        } else {
-            return true;
-        }
+        return !bibos.Contains(false);
     }
 }

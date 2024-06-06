@@ -18,6 +18,9 @@ public partial class GraphLock : Polygon2D
 	private List<string> _doors;
 	private MovementManager _movementManager;
 	private Polygon2D _board;
+	private Stack<int> _way;
+	private int _start;
+	private int _last;
 	
 	public override void _Ready()
 	{
@@ -31,6 +34,9 @@ public partial class GraphLock : Polygon2D
 		_dimension = (TextEdit)GetChildren()[1];
 		_movementManager = MovementManager.Instance;
 		_movementManager.Add(this);
+		_way = new Stack<int>();
+		_last = -1;
+		_start = -1;
 	}
 	
 	public override void _Process(double delta)
@@ -117,9 +123,9 @@ public partial class GraphLock : Polygon2D
 						gn.Free();
 					}
 					_board.Polygon = new[] { new Vector2(200, 0), new Vector2(220 + pup1*60, 0), new Vector2(220 + pup1*60, 20 + pup2*60), new Vector2(200, 20 + pup2*60) };
-					for (int x = 0; x < pup1; x++)
+					for (int y = 0; y < pup2; y++)
 					{
-						for (int y = 0; y < pup2; y++)
+						for (int x = 0; x < pup1; x++)
 						{
 							string name = "Pyro" + x + y;
 							Polygon2D pyropup = ObjectCreator.Create(name, "smol", new Vector2(210 + x * 60, 10 + y * 60), (y * pup1 + x).ToString());
@@ -190,10 +196,60 @@ public partial class GraphLock : Polygon2D
 		}
 		else
 		{
+			if (_graph._vertices[_last].GetOutgoing().Contains(_start))
+			{
+				if (HamiltonianChecker.IsHamilton(_graph, new List<int>(_way)))
+				{
+					_unlocked = true;
+				}
+			}
 			//TODO cesticky
 		}
 	}
-	
+
+	private bool CanAdd(int node)
+	{
+		if (_last == -1)
+		{
+			_start = node;
+			_way.Push(node);
+			_last = node;
+			return true;
+		}
+		if (_graph._vertices[_last].GetOutgoing().Contains(node))
+		{
+			_way.Push(node);
+			_last = node;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private bool CanRemove(int node)
+	{
+		if (_last == node)
+		{
+			_way.Pop();
+			if (_way.Count > 0)
+			{
+				_last = _way.Peek();
+			}
+			else
+			{
+				_start = -1;
+				_last = -1;
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	private void FollowIronMouse()
 	{
 		Position = GetGlobalMousePosition() + _ironMouseOffset;
@@ -223,6 +279,10 @@ public partial class GraphLock : Polygon2D
 						_unlocked = true;
 					}
 					_board.Visible = true;
+				}
+				foreach (Godot.Node fart in _board.GetChildren())
+				{
+					fart.Call("Gamin");
 				}
 				break;
 		}
@@ -272,14 +332,14 @@ public partial class GraphLock : Polygon2D
 			gn.Free();
 		}
 		_board.Polygon = new[] { new Vector2(200, 0), new Vector2(220 + pup1*60, 0), new Vector2(220 + pup1*60, 20 + pup2*60), new Vector2(200, 20 + pup2*60) };
-		for (int x = 0; x < pup1; x++)
+		for (int y = 0; y < pup2; y++)
 		{
-			for (int y = 0; y < pup2; y++)
+			for (int x = 0; x < pup1; x++)
 			{
 				string name = "Pyro" + x + y;
 				Polygon2D pyropup = ObjectCreator.Create(name, "smol", new Vector2(210 + x * 60, 10 + y * 60), (y * pup1 + x).ToString());
-				pyropup.Call("SetState", _graph._vertices[y * pup1 + x].GetState());
 				_board.AddChild(pyropup);
+				pyropup.Call("SetState", _graph._vertices[y * pup1 + x].GetState());
 			}
 		}
 	}
