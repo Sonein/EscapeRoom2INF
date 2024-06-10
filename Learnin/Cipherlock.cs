@@ -182,7 +182,19 @@ public partial class Cipherlock : Polygon2D
 
 	private string GetSpecial()
 	{
+		if (_cipher == null)
+		{
+			_cipher = new Default();
+		}
 		GD.Print(_cipher.Type());
+		if (_key == null || _key.Equals(""))
+		{
+			_key = "$NULL$";
+		}
+		if (_code == null || _code.Equals(""))
+		{
+			_code = "$NULL$";
+		}
 		return _code + " " + _key + " " + _cipher.Type(); 
 	}
 
@@ -194,9 +206,12 @@ public partial class Cipherlock : Polygon2D
 		string cipher = scanner.Next();
 		_cipher = CipherCatalogue.GetCipher(cipher);
 		_key = key;
-		_code = code;
-		_eCode = _cipher.Encrypt(code, _key);
-		((Label)GetChildren()[4]).Text = _eCode;
+		if (code != "$NULL$")
+		{
+			_code = code;
+			_eCode = _cipher.Encrypt(code, _key);
+			((Label)GetChildren()[4]).Text = _eCode;
+		}
 		
 	}
 

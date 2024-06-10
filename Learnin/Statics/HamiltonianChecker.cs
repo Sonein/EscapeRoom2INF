@@ -27,7 +27,12 @@ public class HamiltonianChecker
                 n--;
             }
         }
-        
+
+        if (n <= 2)
+        {
+            return false;
+        }
+
         for (int i = 0; i < n; i++)
         {
             var iqPoint = new Clause<int>();

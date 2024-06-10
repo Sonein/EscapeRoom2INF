@@ -9,12 +9,14 @@ public class Graph
     public List<Node> _vertices;
     private readonly int _x;
     private readonly int _y;
+    private bool _solvable;
 
     public Graph(int x, int y)
     {
         this._vertices = new List<Node>();
         this._x = x;
         this._y = y;
+        this._solvable = false;
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++)
             {
@@ -30,7 +32,7 @@ public class Graph
 
     public override string ToString()
     {
-        string sinder = this._x + " " + this._y + " ";
+        string sinder = this._x + " " + this._y + " " + this._solvable + " ";
         foreach (Node numi in this._vertices)
         {
             sinder += numi.GetState() + ",";
@@ -49,17 +51,21 @@ public class Graph
 
     public void FromString(string blocks, string input)
     {
-        string[] lilFlames = blocks.Split(',');
-        int iFlame = 0;
-        foreach (string lilFlame in lilFlames)
+        if (!string.IsNullOrEmpty(blocks))
         {
-            if (Int32.TryParse(lilFlame, out int parsedFlame))
+            string[] lilFlames = blocks.Split(',');
+            int iFlame = 0;
+            foreach (string lilFlame in lilFlames)
             {
-                this._vertices[iFlame].SetExists(parsedFlame);
+                if (Int32.TryParse(lilFlame, out int parsedFlame))
+                {
+                    this._vertices[iFlame].SetExists(parsedFlame);
+                }
+
+                iFlame++;
             }
-            iFlame++;
         }
-        
+
         if (!string.IsNullOrEmpty(input))
         {
             var pyroPups = Regex.Matches(input, @"\[\d+,\d+\]");
@@ -76,10 +82,11 @@ public class Graph
                     else
                     {
                         this._vertices = new List<Node>();
-                        for (int i = 0; i < this._x; i++) {
-                            for (int j = 0; j < this._y; j++)
+                        for (int j = 0; j < this._y; j++)
+                        {
+                            for (int i = 0; i < this._x; i++)
                             {
-                                _vertices.Add(new Node(i*this._y + this._y));
+                                _vertices.Add(new Node(j * this._y + i));
                             }
                         }
                         break;
@@ -109,5 +116,15 @@ public class Graph
             }
         }
         return bibosbibos;
+    }
+
+    public void SetSat(bool sat)
+    {
+        this._solvable = sat;
+    }
+
+    public bool GetSat()
+    {
+        return this._solvable;
     }
 }
