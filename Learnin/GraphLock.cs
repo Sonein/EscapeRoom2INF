@@ -118,20 +118,7 @@ public partial class GraphLock : Polygon2D
 					}
 					_graph = new Graph(pup1, pup2);
 					//TODO add smol shits to board
-					foreach (Godot.Node gn in _board.GetChildren())
-					{
-						gn.Free();
-					}
-					_board.Polygon = new[] { new Vector2(200, 0), new Vector2(220 + pup1*60, 0), new Vector2(220 + pup1*60, 20 + pup2*60), new Vector2(200, 20 + pup2*60) };
-					for (int y = 0; y < pup2; y++)
-					{
-						for (int x = 0; x < pup1; x++)
-						{
-							string name = "Pyro" + x + y;
-							Polygon2D pyropup = ObjectCreator.Create(name, "smol", new Vector2(210 + x * 60, 10 + y * 60), (y * pup1 + x).ToString());
-							_board.AddChild(pyropup);
-						}
-					}
+					FillBoard(pup1, pup2, false);
 				}
 			}
 		}
@@ -191,8 +178,9 @@ public partial class GraphLock : Polygon2D
 					}
 				}
 			}
-
-			_unlocked = !HamiltonianChecker.HasHamilton(this._graph);
+			
+			this._graph.SetSat(HamiltonianChecker.HasHamilton(this._graph));
+			_unlocked = !this._graph.GetSat();
 		}
 		else
 		{
@@ -274,11 +262,9 @@ public partial class GraphLock : Polygon2D
 				if (_inGame)
 				{
 					_dimension.Clear();
-					if (_graph.GetSize().Item1 == 0 || _graph.GetSize().Item2 == 0)
-					{
-						_unlocked = true;
-					}
+					_unlocked = !_graph.GetSat();
 					_board.Visible = true;
+					FillBoard(this._graph.GetSize().Item1, this._graph.GetSize().Item2, true);
 				}
 				foreach (Godot.Node fart in _board.GetChildren())
 				{
@@ -321,27 +307,14 @@ public partial class GraphLock : Polygon2D
 		Scanner scanner = new Scanner(special);
 		int pup1 = scanner.NextInt();
 		int pup2 = scanner.NextInt();
+		bool sat = bool.Parse(scanner.Next());
 		string states = scanner.Next();
 		string edges = scanner.Next();
 		_graph = new Graph(pup1, pup2);
+		_graph.SetSat(sat);
 		_graph.FromString(states, edges);
 		//TODO restore board
-		_board = (Polygon2D)GetChildren()[4];
-		foreach (Godot.Node gn in _board.GetChildren())
-		{
-			gn.Free();
-		}
-		_board.Polygon = new[] { new Vector2(200, 0), new Vector2(220 + pup1*60, 0), new Vector2(220 + pup1*60, 20 + pup2*60), new Vector2(200, 20 + pup2*60) };
-		for (int y = 0; y < pup2; y++)
-		{
-			for (int x = 0; x < pup1; x++)
-			{
-				string name = "Pyro" + x + y;
-				Polygon2D pyropup = ObjectCreator.Create(name, "smol", new Vector2(210 + x * 60, 10 + y * 60), (y * pup1 + x).ToString());
-				_board.AddChild(pyropup);
-				pyropup.Call("SetState", _graph._vertices[y * pup1 + x].GetState());
-			}
-		}
+		FillBoard(pup1, pup2, true);
 	}
 
 	private void SigKill()
@@ -355,5 +328,28 @@ public partial class GraphLock : Polygon2D
 		}
 		_movementManager.Remove(this);
 		QueueFree();
+	}
+
+	private void FillBoard(int pup1, int pup2, bool hasG)
+	{
+		_board = (Polygon2D)GetChildren()[4];
+		foreach (Godot.Node gn in _board.GetChildren())
+		{
+			gn.Free();
+		}
+		_board.Polygon = new[] { new Vector2(200, 0), new Vector2(220 + pup1*60, 0), new Vector2(220 + pup1*60, 20 + pup2*60), new Vector2(200, 20 + pup2*60) };
+		for (int y = 0; y < pup2; y++)
+		{
+			for (int x = 0; x < pup1; x++)
+			{
+				string name = "Pyro" + x + y;
+				Polygon2D pyropup = ObjectCreator.Create(name, "smol", new Vector2(210 + x * 60, 10 + y * 60), (y * pup1 + x).ToString());
+				_board.AddChild(pyropup);
+				if (hasG)
+				{
+					pyropup.Call("SetState", _graph._vertices[y * pup1 + x].GetState());
+				}
+			}
+		}
 	}
 }
