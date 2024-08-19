@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://CipherLock.cs" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 99.5, 100.5 )
+
+[node name="Node2D" type="Polygon2D"]
+color = Color( 0.278431, 0.352941, 0.235294, 1 )
+polygon = PoolVector2Array( 0, 0, 200, 0, 200, 200, 0, 200 )
+script = ExtResource( 1 )
+
+[node name="TextEdit" type="TextEdit" parent="."]
+margin_top = 56.0
+margin_right = 200.0
+margin_bottom = 144.0
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 100.5, 100.5 )
+shape = SubResource( 1 )
+
+[node name="SettingBox" type="Polygon2D" parent="."]
+color = Color( 0.278431, 0.184314, 0.290196, 1 )
+polygon = PoolVector2Array( 200, 0, 600, 0, 600, 350, 200, 350 )
+
+[node name="TextEdit1" type="TextEdit" parent="SettingBox"]
+margin_left = 200.0
+margin_top = 40.0
+margin_right = 600.0
+margin_bottom = 96.0
+
+[node name="TextEdit2" type="TextEdit" parent="SettingBox"]
+margin_left = 200.0
+margin_top = 136.0
+margin_right = 600.0
+margin_bottom = 192.0
+
+[node name="TextEdit3" type="TextEdit" parent="SettingBox"]
+margin_left = 200.0
+margin_top = 232.0
+margin_right = 600.0
+margin_bottom = 288.0
+
+[node name="Label1" type="Label" parent="SettingBox"]
+margin_left = 321.0
+margin_top = 10.0
+margin_right = 473.0
+margin_bottom = 55.0
+text = "Raw password:
+"
+align = 1
+valign = 2
+
+[node name="Label2" type="Label" parent="SettingBox"]
+margin_left = 348.0
+margin_top = 106.0
+margin_right = 448.0
+margin_bottom = 146.0
+text = "Cipher Type:"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="SettingBox"]
+margin_left = 371.0
+margin_top = 201.0
+margin_right = 430.0
+margin_bottom = 240.0
+text = "Code:"
+align = 1
+valign = 1
+
+[node name="Button" type="Button" parent="SettingBox"]
+margin_left = 296.0
+margin_top = 296.0
+margin_right = 512.0
+margin_bottom = 344.0
+text = "SUBMIT"
+
+[node name="Tooltip" type="Polygon2D" parent="."]
+color = Color( 0.541176, 0.247059, 0.392157, 1 )
+polygon = PoolVector2Array( 200, 350, 600, 350, 600, 550, 200, 550 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Tooltip"]
+margin_left = 200.0
+margin_top = 351.0
+margin_right = 601.0
+margin_bottom = 552.0
+
+[node name="Lullaby" type="Label" parent="."]
+margin_top = 1.0
+margin_right = 199.0
+margin_bottom = 57.0
+
+[connection signal="text_changed" from="TextEdit" to="." method="OnTextEditTextChanged"]
+[connection signal="input_event" from="Area2D" to="." method="OnArea2DInputEvent"]
+[connection signal="text_changed" from="SettingBox/TextEdit2" to="." method="OnTextEdit2TextChanged"]
+[connection signal="button_down" from="SettingBox/Button" to="." method="OnButtonButtonDown"]
