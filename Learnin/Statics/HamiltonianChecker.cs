@@ -40,7 +40,7 @@ public class HamiltonianChecker
             {
                 if (geega._vertices[j].GetState() != 1)
                 {
-                    iqPoint.Add(Literal.Of(Encode(i, j, n)));
+                    iqPoint.Add(Literal.Of(Encode(i, j, n2)));
                 }
             }
             iq999.Add(iqPoint);
@@ -55,7 +55,7 @@ public class HamiltonianChecker
                     if (geega._vertices[j].GetState() != 1 && geega._vertices[k].GetState() != 1)
                     {
                         iq999.Add(new Clause<int>
-                            { Literal.Of(Encode(i, j, n)).Negate(), Literal.Of(Encode(i, k, n)).Negate() });
+                            { Literal.Of(Encode(i, j, n2)).Negate(), Literal.Of(Encode(i, k, n2)).Negate() });
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class HamiltonianChecker
                     if (geega._vertices[k].GetState() != 1)
                     {
                         iq999.Add(new Clause<int>
-                            { Literal.Of(Encode(i, k, n)).Negate(), Literal.Of(Encode(j, k, n)).Negate() });
+                            { Literal.Of(Encode(i, k, n2)).Negate(), Literal.Of(Encode(j, k, n2)).Negate() });
                     }
                 }
             } 
@@ -88,7 +88,7 @@ public class HamiltonianChecker
                         if (geega._vertices[i].GetState() != 1 && geega._vertices[j].GetState() != 1)
                         {
                             iq999.Add(new Clause<int>
-                                { Literal.Of(Encode(k, i, n)).Negate(), Literal.Of(Encode((k+1)%n, j, n)).Negate() });
+                                { Literal.Of(Encode(k, i, n2)).Negate(), Literal.Of(Encode((k+1)%n, j, n2)).Negate() });
                         }
                     }
                 }
