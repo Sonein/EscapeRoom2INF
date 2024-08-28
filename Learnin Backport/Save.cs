@@ -29,7 +29,7 @@ public class Save : Button
 	{
 		if (!_inGame)
 		{
-			var nodes = (Array<Polygon2D>)GetNode<Node>("/root/Main/Menu/ItemList/ListMenu").Call("GetNodes");
+			var nodes = Caster.CastToArrayPoly2D(GetNode<Node>("/root/Main/Menu/ItemList/ListMenu").Call("GetNodes"));
 			List<Polygon2D> nodesFr = nodes.ToList();
 			_gameSaver.Save(_path, nodesFr);
 		}

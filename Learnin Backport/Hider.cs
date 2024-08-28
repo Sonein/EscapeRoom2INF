@@ -22,15 +22,17 @@ public class Hider : Button
 		{
 			this.RectRotation += 180;
 			this.RectPosition += new Vector2(48, 48);
+			/*GetNode<Polygon2D>("/root/Main/Menu").Position += new Vector2(420, 0);*/
 			_left = true;
-			GetNode<Polygon2D>("/root/Main/Menu").Position += new Vector2(420, 0);
+			GetNode<Polygon2D>("/root/Main/Menu").Visible = false;
 		}
 		else
 		{
 			this.RectRotation -= 180;
 			this.RectPosition -= new Vector2(48, 48);
+			/*GetNode<Polygon2D>("/root/Main/Menu").Position -= new Vector2(420, 0);*/
 			_left = false;
-			GetNode<Polygon2D>("/root/Main/Menu").Position -= new Vector2(420, 0);
+			GetNode<Polygon2D>("/root/Main/Menu").Visible = true;
 		}
 	}
 }
